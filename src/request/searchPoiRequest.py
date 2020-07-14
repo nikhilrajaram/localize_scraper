@@ -1,5 +1,4 @@
 from src.model.addressDetails import AddressDetails
-from src.model.apiResponsePayload import ApiResponsePayload
 from src.model.cursor import Cursor
 from src.model.data import Data
 from src.model.eventsHistory import EventsHistory
@@ -41,61 +40,60 @@ class SearchPoiRequest:
             "maxCommute": None
         }
     }
-    DEFAULT_QUERY = "query searchPoi($dealType: String, $userContext: JSONObject, $abtests: JSONObject, " \
-                    "$noFee: Boolean, $priceRange: [Int], $ppmRange: [Int], $monthlyTaxRange: [Int], $roomsRange: [" \
-                    "Int], $bathsRange: [Float], $buildingClass: [String], $amenities: inputAmenitiesFilter, " \
-                    "$openHouse: String, $generalCondition: [GeneralCondition], $sellerType: [SellerType], " \
-                    "$floorRange: [Int], $areaRange: [Int], $tileRanges: [TileRange], $tileRangesExcl: [TileRange], " \
-                    "$sort: [SortField], $limit: Int, $offset: Int, $cursor: inputCursor, $poiTypes: [PoiType], " \
-                    "$locationDocId: String, $abtests: JSONObject, $searchContext: SearchContext) {\n  searchPoiV2(" \
-                    "noFee: $noFee, dealType: $dealType, userContext: $userContext, abtests: $abtests, priceRange: " \
-                    "$priceRange, ppmRange: $ppmRange, monthlyTaxRange: $monthlyTaxRange, roomsRange: $roomsRange, " \
-                    "bathsRange: $bathsRange, buildingClass: $buildingClass, sellerType: $sellerType, floorRange: " \
-                    "$floorRange, areaRange: $areaRange, generalCondition: $generalCondition, amenities: $amenities, " \
-                    "openHouse: $openHouse, tileRanges: $tileRanges, tileRangesExcl: $tileRangesExcl, sort: $sort, " \
-                    "limit: $limit, offset: $offset, cursor: $cursor, poiTypes: $poiTypes, locationDocId: " \
-                    "$locationDocId, abtests: $abtests, searchContext: $searchContext) {\n    total\n    cursor {\n   " \
-                    "   bulletinsOffset\n      projectsOffset\n      seenProjects\n      __typename\n    }\n    " \
-                    "totalNearby\n    lastInGeometryId\n    cursor {\n      bulletinsOffset\n      projectsOffset\n   " \
-                    "   __typename\n    }\n    ...PoiFragment\n    __typename\n  }\n}\n\nfragment PoiFragment on " \
-                    "PoiSearchResult {\n  poi {\n    ...PoiInner\n    ... on Bulletin {\n      rentalBrokerFee\n      " \
-                    "eventsHistory {\n        eventType\n        price\n        date\n        __typename\n      }\n   " \
-                    "   openHouses {\n        from\n        to\n        __typename\n      }\n      insights {\n       " \
-                    " insights {\n          category\n          tradeoff {\n            insightPlace\n            " \
-                    "value\n            tagLine\n            impactful\n            __typename\n          }\n         " \
-                    " __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  " \
-                    "}\n  __typename\n}\n\nfragment PoiInner on Poi {\n  id\n  locationPoint {\n    lat\n    lng\n    " \
-                    "__typename\n  }\n  type\n  firstTimeSeen\n  addressDetails {\n    docId\n    city\n    borough\n " \
-                    "   zipcode\n    streetName\n    neighbourhood\n    neighbourhoodDocId\n    cityDocId\n    " \
-                    "resolutionPreferences\n    streetNumber\n    unitNumber\n    district\n    __typename\n  }\n  " \
-                    "... on Project {\n    dealType\n    bedsRange {\n      min\n      max\n      __typename\n    }\n " \
-                    "   priceRange {\n      min\n      max\n      __typename\n    }\n    images {\n      path\n      " \
-                    "__typename\n    }\n    promotionStatus {\n      status\n      __typename\n    }\n    " \
-                    "projectName\n    projectLogo\n    projectMessages {\n      listingDescription\n      " \
-                    "__typename\n    }\n    previewImage {\n      path\n      __typename\n    }\n    developers {\n   " \
-                    "   id\n      logoPath\n      __typename\n    }\n    tags {\n      bestSchool\n      " \
-                    "bestSecular\n      bestReligious\n      safety\n      parkAccess\n      quietStreet\n      " \
-                    "bikeFriendly\n      dogPark\n      naturalLight\n      familyFriendly\n      lightRail\n      " \
-                    "commute\n      __typename\n    }\n    buildingStage\n    blockDetails {\n      buildingsNum\n    " \
-                    "  floorRange {\n        min\n        max\n        __typename\n      }\n      units\n      " \
-                    "mishtakenPrice\n      urbanRenewal\n      __typename\n    }\n    __typename\n  }\n  ... on " \
-                    "Bulletin {\n    dealType\n    address\n    matchScore\n    beds\n    baths\n    buildingYear\n   " \
-                    " area\n    price\n    virtualTours\n    rentalBrokerFee\n    eventsHistory {\n      eventType\n  " \
-                    "    price\n      date\n      __typename\n    }\n    status {\n      promoted\n      __typename\n " \
-                    "   }\n    poc {\n      type\n      ... on BulletinAgent {\n        officeContact {\n          " \
-                    "imageUrl\n          __typename\n        }\n        exclusivity {\n          exclusive\n          " \
-                    "__typename\n        }\n        __typename\n      }\n      __typename\n    }\n    tags {\n      " \
-                    "bestSchool\n      bestSecular\n      bestReligious\n      safety\n      parkAccess\n      " \
-                    "quietStreet\n      bikeFriendly\n      dogPark\n      naturalLight\n      familyFriendly\n      " \
-                    "lightRail\n      commute\n      __typename\n    }\n    openHouses {\n      from\n      to\n      " \
-                    "__typename\n    }\n    commuteTime\n    dogsParkWalkTime\n    parkWalkTime\n    buildingClass\n  " \
-                    "  images {\n      ...ImageItem\n      __typename\n    }\n    __typename\n  }\n  ... on Ad {\n    " \
-                    "addressDetails {\n      docId\n      city\n      borough\n      zipcode\n      streetName\n      " \
-                    "neighbourhood\n      neighbourhoodDocId\n      resolutionPreferences\n      streetNumber\n      " \
-                    "unitNumber\n      __typename\n    }\n    city\n    district\n    firstTimeSeen\n    id\n    " \
-                    "locationPoint {\n      lat\n      lng\n      __typename\n    }\n    neighbourhood\n    type\n    " \
-                    "__typename\n  }\n  __typename\n}\n\nfragment ImageItem on ImageItem {\n  description\n  " \
-                    "imageUrl\n  isFloorplan\n  rotation\n  __typename\n}\n "
+    DEFAULT_QUERY = "query searchPoi($dealType: String, $userContext: JSONObject, $abtests: JSONObject, $noFee: Boole" \
+                    "an, $priceRange: [Int], $ppmRange: [Int], $monthlyTaxRange: [Int], $roomsRange: [Int], $bathsRan" \
+                    "ge: [Float], $buildingClass: [String], $amenities: inputAmenitiesFilter, $openHouse: String, $ge" \
+                    "neralCondition: [GeneralCondition], $sellerType: [SellerType], $floorRange: [Int], $areaRange: [" \
+                    "Int], $tileRanges: [TileRange], $tileRangesExcl: [TileRange], $sort: [SortField], $limit: Int, $" \
+                    "offset: Int, $cursor: inputCursor, $poiTypes: [PoiType], $locationDocId: String, $abtests: JSONO" \
+                    "bject, $searchContext: SearchContext) {\n  searchPoiV2(noFee: $noFee, dealType: $dealType, userC" \
+                    "ontext: $userContext, abtests: $abtests, priceRange: $priceRange, ppmRange: $ppmRange, monthlyTa" \
+                    "xRange: $monthlyTaxRange, roomsRange: $roomsRange, bathsRange: $bathsRange, buildingClass: $buil" \
+                    "dingClass, sellerType: $sellerType, floorRange: $floorRange, areaRange: $areaRange, generalCondi" \
+                    "tion: $generalCondition, amenities: $amenities, openHouse: $openHouse, tileRanges: $tileRanges, " \
+                    "tileRangesExcl: $tileRangesExcl, sort: $sort, limit: $limit, offset: $offset, cursor: $cursor, p" \
+                    "oiTypes: $poiTypes, locationDocId: $locationDocId, abtests: $abtests, searchContext: $searchCont" \
+                    "ext) {\n    total\n    cursor {\n      bulletinsOffset\n      projectsOffset\n      seenProjects" \
+                    "\n      __typename\n    }\n    totalNearby\n    lastInGeometryId\n    cursor {\n      bulletinsO" \
+                    "ffset\n      projectsOffset\n      __typename\n    }\n    ...PoiFragment\n    __typename\n  }\n}" \
+                    "\n\nfragment PoiFragment on PoiSearchResult {\n  poi {\n    ...PoiInner\n    ... on Bulletin {\n" \
+                    "      rentalBrokerFee\n      eventsHistory {\n        eventType\n        price\n        date\n  " \
+                    "      __typename\n      }\n      openHouses {\n        from\n        to\n        __typename\n   " \
+                    "   }\n      insights {\n        insights {\n          category\n          tradeoff {\n          " \
+                    "  insightPlace\n            value\n            tagLine\n            impactful\n            __typ" \
+                    "ename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typena" \
+                    "me\n    }\n    __typename\n  }\n  __typename\n}\n\nfragment PoiInner on Poi {\n  id\n  locationP" \
+                    "oint {\n    lat\n    lng\n    __typename\n  }\n  type\n  firstTimeSeen\n  addressDetails {\n    " \
+                    "docId\n    city\n    borough\n    zipcode\n    streetName\n    neighbourhood\n    neighbourhoodD" \
+                    "ocId\n    cityDocId\n    resolutionPreferences\n    streetNumber\n    unitNumber\n    district\n" \
+                    "    __typename\n  }\n  ... on Project {\n    dealType\n    bedsRange {\n      min\n      max\n  " \
+                    "    __typename\n    }\n    priceRange {\n      min\n      max\n      __typename\n    }\n    imag" \
+                    "es {\n      path\n      __typename\n    }\n    promotionStatus {\n      status\n      __typename" \
+                    "\n    }\n    projectName\n    projectLogo\n    projectMessages {\n      listingDescription\n    " \
+                    "  __typename\n    }\n    previewImage {\n      path\n      __typename\n    }\n    developers {\n" \
+                    "      id\n      logoPath\n      __typename\n    }\n    tags {\n      bestSchool\n      bestSecul" \
+                    "ar\n      bestReligious\n      safety\n      parkAccess\n      quietStreet\n      bikeFriendly\n" \
+                    "      dogPark\n      naturalLight\n      familyFriendly\n      lightRail\n      commute\n      _" \
+                    "_typename\n    }\n    buildingStage\n    blockDetails {\n      buildingsNum\n      floorRange {" \
+                    "\n        min\n        max\n        __typename\n      }\n      units\n      mishtakenPrice\n    " \
+                    "  urbanRenewal\n      __typename\n    }\n    __typename\n  }\n  ... on Bulletin {\n    dealType" \
+                    "\n    address\n    matchScore\n    beds\n    baths\n    buildingYear\n    area\n    price\n    v" \
+                    "irtualTours\n    rentalBrokerFee\n    eventsHistory {\n      eventType\n      price\n      date" \
+                    "\n      __typename\n    }\n    status {\n      promoted\n      __typename\n    }\n    poc {\n   " \
+                    "   type\n      ... on BulletinAgent {\n        officeContact {\n          imageUrl\n          __" \
+                    "typename\n        }\n        exclusivity {\n          exclusive\n          __typename\n        }" \
+                    "\n        __typename\n      }\n      __typename\n    }\n    tags {\n      bestSchool\n      best" \
+                    "Secular\n      bestReligious\n      safety\n      parkAccess\n      quietStreet\n      bikeFrien" \
+                    "dly\n      dogPark\n      naturalLight\n      familyFriendly\n      lightRail\n      commute\n  " \
+                    "    __typename\n    }\n    openHouses {\n      from\n      to\n      __typename\n    }\n    comm" \
+                    "uteTime\n    dogsParkWalkTime\n    parkWalkTime\n    buildingClass\n    images {\n      ...Image" \
+                    "Item\n      __typename\n    }\n    __typename\n  }\n  ... on Ad {\n    addressDetails {\n      d" \
+                    "ocId\n      city\n      borough\n      zipcode\n      streetName\n      neighbourhood\n      nei" \
+                    "ghbourhoodDocId\n      resolutionPreferences\n      streetNumber\n      unitNumber\n      __type" \
+                    "name\n    }\n    city\n    district\n    firstTimeSeen\n    id\n    locationPoint {\n      lat\n" \
+                    "      lng\n      __typename\n    }\n    neighbourhood\n    type\n    __typename\n  }\n  __typena" \
+                    "me\n}\n\nfragment ImageItem on ImageItem {\n  description\n  imageUrl\n  isFloorplan\n  rotation" \
+                    "\n  __typename\n}\n "
     HEADERS = {
         'Accept-Encoding': 'gzip, deflate',
         'DNT': '1',
@@ -124,9 +122,13 @@ class SearchPoiRequest:
     def __init__(self, no_fee=False, deal_type="unitRent", rooms_range=(3, 3), baths_range=(None, None),
                  floor_range=(None, None), area_range=(None, None), building_class=(), seller_type=(),
                  general_condition=(), ppm_range=(), price_range=(None, None), monthly_tax_range=(None, None),
-                 amenities={}, sort=None, open_house=None, commute_coordinates=(None, None), priorities=(),
-                 poi_types=("bulletin", "project"), search_context="marketplace", abtests={}, offset=0, limit=1000,
+                 amenities=None, sort=None, open_house=None, commute_coordinates=(None, None), priorities=(),
+                 poi_types=("bulletin", "project"), search_context="marketplace", abtests=None, offset=0, limit=1000,
                  query=None):
+        if abtests is None:
+            abtests = {}
+        if amenities is None:
+            amenities = {}
         self.data = SearchPoiRequest.DEFAULT_DATA
         variables = self.data['variables']
         variables['noFee'] = no_fee
