@@ -43,7 +43,7 @@ class SearchPoiRequest:
     }
     URL = 'https://www.localize.city/api2'
 
-    def __init__(self, no_fee=False, deal_type="unitRent", rooms_range=(3, 3), baths_range=(None, None),
+    def __init__(self, no_fee=False, deal_type="unitRent", rooms_range=(None, None), baths_range=(None, None),
                  floor_range=(None, None), area_range=(None, None), building_class=(), seller_type=(),
                  general_condition=(), ppm_range=(), price_range=(None, None), monthly_tax_range=(None, None),
                  amenities=None, sort=None, open_house=None, commute_coordinates=(None, None), priorities=(),
