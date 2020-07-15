@@ -1,15 +1,4 @@
-from src.model.addressDetails import AddressDetails
-from src.model.cursor import Cursor
-from src.model.data import Data
-from src.model.eventsHistory import EventsHistory
-from src.model.images import Images
-from src.model.insights import Insights
-from src.model.locationPoint import LocationPoint
-from src.model.poc import Poc
-from src.model.poi import Poi
-from src.model.searchPoiV2 import SearchPoiV2
-from src.model.status import Status
-from src.model.tags import Tags
+from src.model.apiResponsePayload import ApiResponsePayload
 
 import requests
 import json
@@ -104,20 +93,6 @@ class SearchPoiRequest:
                       'Chrome/83.0.4103.116 Safari/537.36 '
     }
     URL = 'https://www.localize.city/api2'
-    RESPONSE_MAP = {
-        'data': Data,
-        'searchPoiV2': SearchPoiV2,
-        'cursor': Cursor,
-        'poi': Poi,
-        'locationPoint': LocationPoint,
-        'addressDetails': AddressDetails,
-        'eventsHistory': EventsHistory,
-        'status': Status,
-        'poc': Poc,
-        'tags': Tags,
-        'images': Images,
-        'insights': Insights
-    }
 
     def __init__(self, no_fee=False, deal_type="unitRent", rooms_range=(3, 3), baths_range=(None, None),
                  floor_range=(None, None), area_range=(None, None), building_class=(), seller_type=(),
@@ -181,25 +156,9 @@ class SearchPoiRequest:
 
         return new_d
 
-    @staticmethod
-    def serialize_response(resp):
-        for k, v in resp.items():
-            if type(v) is dict:
-                try:
-                    return SearchPoiRequest.RESPONSE_MAP[k](**SearchPoiRequest.camelcase_dict(v))
-                except KeyError:
-                    return v
-            elif type(v) is list and v:
-                try:
-                    return [SearchPoiRequest.RESPONSE_MAP[k](**SearchPoiRequest.camelcase_dict(x)) for x in v]
-                except KeyError:
-                    return v
-            else:
-                return v
-
     def get_response(self):
         response = requests.post(url=self.url, headers=self.headers, data=json.dumps(self.data))
         if response.status_code != 200:
             raise ValueError
 
-        return response.json()
+        return ApiResponsePayload.from_json(response.json())
