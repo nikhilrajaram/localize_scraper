@@ -1,5 +1,19 @@
+from src.model.addressDetails import AddressDetails
+from src.model.eventsHistory import EventsHistory
+from src.model.images import Images
+from src.model.insights import Insights
+from src.model.locationPoint import LocationPoint
+from src.model.poc import Poc
+from src.model.status import Status
+from src.model.tags import Tags
+
+
 class Poi:
-    def __init__(self, id=None, location_point=None, type=None, first_time_seen=None, address_details=None, deal_type=None, address=None, match_score=None, beds=None, baths=None, building_year=None, area=None, price=None, virtual_tours=None, rental_broker_fee=None, events_history=[], status=None, poc=None, tags=None, open_houses=[], commute_time=None, dogs_park_walk_time=None, park_walk_time=None, building_class=None, images=[], __typename=None, insights=None):
+    def __init__(self, id=None, location_point=None, type=None, first_time_seen=None, address_details=None,
+                 deal_type=None, address=None, match_score=None, beds=None, baths=None, building_year=None, area=None,
+                 price=None, virtual_tours=None, rental_broker_fee=None, events_history=[], status=None, poc=None,
+                 tags=None, open_houses=[], commute_time=None, dogs_park_walk_time=None, park_walk_time=None,
+                 building_class=None, images=[], __typename=None, insights=None):
         self.id = id
         self.location_point = location_point
         self.type = type
@@ -27,3 +41,31 @@ class Poi:
         self.images = images
         self.__typename = __typename
         self.insights = insights
+
+    @classmethod
+    def from_json(cls, json):
+        if json is None:
+            return Poi()
+
+        if type(json) is list:
+            return [Poi.from_json(poi) for poi in json]
+
+        try:
+            eventsHistory = [EventsHistory.from_json(_eventsHistory) for _eventsHistory in json.get('eventsHistory')]
+        except TypeError:
+            eventsHistory = []
+
+        try:
+            images = [Images.from_json(_images) for _images in json.get('images')]
+        except TypeError:
+            images = []
+
+        return Poi(json.get('id'), LocationPoint.from_json(json.get('locationPoint')), json.get('type'),
+                   json.get('firstTimeSeen'), AddressDetails.from_json(json.get('addressDetails')),
+                   json.get('dealType'), json.get('address'), json.get('matchScore'), json.get('beds'),
+                   json.get('baths'), json.get('buildingYear'), json.get('area'), json.get('price'),
+                   json.get('virtualTours'), json.get('rentalBrokerFee'), eventsHistory,
+                   Status.from_json(json.get('status')), Poc.from_json(json.get('poc')),
+                   Tags.from_json(json.get('tags')), json.get('openHouses'), json.get('commuteTime'),
+                   json.get('dogsParkWalkTime'), json.get('parkWalkTime'), json.get('buildingClass'), images,
+                   json.get('__typename'), Insights.from_json(json.get('insights')))

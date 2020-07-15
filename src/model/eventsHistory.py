@@ -4,3 +4,13 @@ class EventsHistory:
         self.price = price
         self.date = date
         self.__typename = __typename
+
+    @classmethod
+    def from_json(cls, json):
+        if json is None:
+            return EventsHistory()
+
+        if type(json) is list:
+            return [EventsHistory.from_json(eventsHistory) for eventsHistory in json]
+
+        return EventsHistory(json.get('eventType'), json.get('price'), json.get('date'), json.get('__typename'))
