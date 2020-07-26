@@ -105,6 +105,11 @@ class SearchPoiRequest:
 
     @staticmethod
     def camelcase_dict(d):
+        """
+        Returns a dictionary with all keys camelCased
+        :param d: dictionary to camelCase
+        :return: camelCased key dictionary
+        """
         new_d = {}
         for k, v in d.items():
             new_d[SearchPoiRequest.camelcase_to_snaked(k)] = v
