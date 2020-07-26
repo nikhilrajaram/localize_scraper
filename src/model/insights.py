@@ -1,3 +1,6 @@
+from src.model.insight import Insight
+
+
 class Insights:
     def __init__(self, insights=[], __typename=None):
         self.insights = insights
@@ -12,7 +15,7 @@ class Insights:
             return [Insights.from_json(insights) for insights in json]
 
         try:
-            insights = [Insights.from_json(_insights) for _insights in json.get('insights')]
+            insights = [Insight.from_json(_insights) for _insights in json.get('insights')]
         except TypeError:
             insights = []
 
