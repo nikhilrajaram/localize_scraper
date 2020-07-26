@@ -1,8 +1,12 @@
 from src.model.apiResponsePayload import ApiResponsePayload
 
 import requests
+import asyncio
+import aiohttp
 import json
 import re
+import numpy as np
+from copy import deepcopy
 
 
 class SearchPoiRequest:
@@ -86,6 +90,8 @@ class SearchPoiRequest:
         self.data['query'] = SearchPoiRequest.DEFAULT_QUERY if not query else query
         self.headers = SearchPoiRequest.HEADERS
         self.url = SearchPoiRequest.URL
+        self._sync_session = requests.Session()
+        self._async_session = None
 
     @staticmethod
     def camelcase_to_snaked(s):
@@ -105,9 +111,72 @@ class SearchPoiRequest:
 
         return new_d
 
-    def get_response(self):
-        response = requests.post(url=self.url, headers=self.headers, data=json.dumps(self.data))
+    async def _async_session_init(self):
+        """
+        Instantiate asynchronous connection pool
+        :return: None
+        """
+        self._async_session = aiohttp.ClientSession()
+
+    def _execute_sync(self):
+        """
+        Execute a synchronous request to the Localize API
+        :return: json-like response body as a dict
+        """
+        response = self._sync_session.post(url=self.url, headers=self.headers, data=json.dumps(self.data))
         if response.status_code != 200:
             raise ValueError
 
-        return ApiResponsePayload.from_json(response.json())
+        return response.json()
+
+    async def _execute_async(self, payload):
+        """
+        Create a coroutine for a single request to the Localize API
+        :param payload: payload to POST
+        :return: request coroutine
+        """
+        async with self._async_session.post(url=self.url, headers=self.headers, data=json.dumps(payload)) as response:
+            if response.status != 200:
+                raise ValueError
+
+            return await response.json()
+
+    async def _batch_execute_async(self, payloads):
+        """
+        Asynchronously perform requests to Localize API to list of payloads
+        :param payloads: list of payloads to POST
+        :return: list of responses
+        """
+        tasks = [self._execute_async(payload) for payload in payloads]
+        resps = await asyncio.gather(self._async_session_init(), *tasks, return_exceptions=True)
+        await self._async_session.close()
+        return resps
+
+    def execute(self):
+        """
+        Execute request
+        If request is paginated, make requests asynchronously
+        Serialize response and return
+        :return: Serialized response
+        """
+        page = 0
+        response = ApiResponsePayload.from_json(self._execute_sync())
+        total_len = response.data.search_poi_v2.total
+        response_len = len(response.data.search_poi_v2.poi)
+        payloads = []
+        for i in range(1, np.ceil(total_len / response_len).astype(int)):
+            page += 1
+            payload = deepcopy(self.data)
+            payload['variables']['offset'] += response_len
+            payloads.append(payload)
+
+        if payloads:
+            responses = asyncio.run(self._batch_execute_async(payloads), debug=True)
+            for resp in responses:
+                if resp is None:
+                    continue
+
+                next_page_response = ApiResponsePayload.from_json(resp)
+                response.data.search_poi_v2.poi.extend(next_page_response.data.search_poi_v2.poi)
+
+        return response
