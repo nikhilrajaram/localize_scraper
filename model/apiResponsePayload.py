@@ -1,4 +1,4 @@
-from src.model.data import Data
+from model.data import Data
 
 
 class ApiResponsePayload:

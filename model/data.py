@@ -1,4 +1,4 @@
-from src.model.searchPoiV2 import SearchPoiV2
+from model.searchPoiV2 import SearchPoiV2
 
 
 class Data:

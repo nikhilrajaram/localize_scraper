@@ -1,11 +1,11 @@
-from src.model.addressDetails import AddressDetails
-from src.model.eventsHistory import EventsHistory
-from src.model.images import Images
-from src.model.insights import Insights
-from src.model.locationPoint import LocationPoint
-from src.model.poc import Poc
-from src.model.status import Status
-from src.model.tags import Tags
+from model.addressDetails import AddressDetails
+from model.eventsHistory import EventsHistory
+from model.images import Images
+from model.insights import Insights
+from model.locationPoint import LocationPoint
+from model.poc import Poc
+from model.status import Status
+from model.tags import Tags
 
 
 class Poi:

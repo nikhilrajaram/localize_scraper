@@ -1,4 +1,4 @@
-from src.model.insight import Insight
+from model.insight import Insight
 
 
 class Insights:

@@ -1,5 +1,5 @@
-from src.model.cursor import Cursor
-from src.model.poi import Poi
+from model.cursor import Cursor
+from model.poi import Poi
 
 
 class SearchPoiV2:

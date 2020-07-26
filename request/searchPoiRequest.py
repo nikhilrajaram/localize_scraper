@@ -1,4 +1,4 @@
-from src.model.apiResponsePayload import ApiResponsePayload
+from model import ApiResponsePayload
 
 import requests
 import asyncio

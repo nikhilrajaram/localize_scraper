@@ -1,4 +1,4 @@
-from src.model.tradeoff import Tradeoff
+from model.tradeoff import Tradeoff
 
 
 class Insight:
